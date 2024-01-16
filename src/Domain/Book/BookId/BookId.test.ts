@@ -1,4 +1,3 @@
-import { describe } from "node:test";
 import { BookId } from "./BookId";
 
 describe("BookId", () => {

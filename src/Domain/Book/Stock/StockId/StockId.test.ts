@@ -1,4 +1,3 @@
-import { describe } from "node:test";
 import { StockId } from "./StockId";
 
 jest.mock("nanoid", () => ({ nanoid: () => "testIdWithExactLength" }));

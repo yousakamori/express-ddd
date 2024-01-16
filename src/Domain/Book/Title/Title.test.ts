@@ -1,4 +1,3 @@
-import { describe } from "node:test";
 import { Title } from "./Title";
 
 describe("Title", () => {

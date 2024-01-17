@@ -1,6 +1,6 @@
-import { QuantityAvailable } from "Domain/Book/Stock/QuantityAvailable/QuantityAvailable";
-import { Status, StatusEnum } from "Domain/Book/Stock/Status/Status";
-import { StockId } from "Domain/Book/Stock/StockId/StockId";
+import { QuantityAvailable } from "./QuantityAvailable/QuantityAvailable";
+import { Status, StatusEnum } from "./Status/Status";
+import { StockId } from "./StockId/StockId";
 
 export class Stock {
   private constructor(

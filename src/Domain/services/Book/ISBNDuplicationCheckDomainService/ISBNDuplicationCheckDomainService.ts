@@ -11,7 +11,7 @@ export class ISBNDuplicationCheckDomainService {
       },
     });
 
-    const isDuplicateISBN = duplicateISBNBok !== null;
+    const isDuplicateISBN = !!duplicateISBNBok;
     return isDuplicateISBN;
   }
 }

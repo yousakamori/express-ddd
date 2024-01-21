@@ -5,7 +5,7 @@ CREATE TYPE "Status" AS ENUM ('IN_STOCK', 'LOW_STOCK', 'OUT_OF_STOCK');
 CREATE TABLE "Book" (
     "bookId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "priceAmout" DOUBLE PRECISION NOT NULL,
+    "priceAmount" DOUBLE PRECISION NOT NULL,
 
     CONSTRAINT "Book_pkey" PRIMARY KEY ("bookId")
 );

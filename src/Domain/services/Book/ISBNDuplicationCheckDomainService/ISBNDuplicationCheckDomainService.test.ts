@@ -1,24 +1,54 @@
-import { PrismaClient } from "@prisma/client";
+import { InMemoryBookRepository } from "Infrastructure/InMemory/Book/InMemoryBookRepository";
 import { ISBNDuplicationCheckDomainService } from "./ISBNDuplicationCheckDomainService";
 import { BookId } from "Domain/models/Book/BookId/BookId";
-
-jest.mock("@prisma/client", () => {
-  return {
-    PrismaClient: jest.fn().mockImplementation(() => ({
-      book: {
-        findUnique: jest.fn(),
-      },
-    })),
-  };
-});
+import { Title } from "Domain/models/Book/Title/Title";
+import { Price } from "Domain/models/Book/Price/Price";
+import { Book } from "Domain/models/Book/Book";
 
 describe("ISBNDuplicationCheckDomainService", () => {
-  test("ISBNが重複していない場合falseを返す", async () => {
-    const prisma = new PrismaClient();
-    const service = new ISBNDuplicationCheckDomainService();
+  let isbnDuplicationCheckDomainService: ISBNDuplicationCheckDomainService;
+  let inMemoryBookRepository: InMemoryBookRepository;
 
-    (prisma.book.findUnique as jest.Mock).mockResolvedValue(null);
+  beforeEach(() => {
+    // テスト前に初期化する
+    inMemoryBookRepository = new InMemoryBookRepository();
+    isbnDuplicationCheckDomainService = new ISBNDuplicationCheckDomainService(
+      inMemoryBookRepository
+    );
+  });
+
+  test("重複がない場合falseを返す", async () => {
     const isbn = new BookId("9784167158057");
-    expect(await service.execute(isbn)).toBeFalsy();
+    const result = await isbnDuplicationCheckDomainService.execute(isbn);
+
+    expect(result).toBeFalsy();
+  });
+
+  test("重複がある場合trueを返す", async () => {
+    const isbn = new BookId("9784167158057");
+    const title = new Title("吾輩は猫である");
+    const price = new Price({
+      amount: 770,
+      currency: "JPY",
+    });
+
+    const book = Book.create(isbn, title, price);
+    await inMemoryBookRepository.save(book);
+    const result = await isbnDuplicationCheckDomainService.execute(isbn);
+
+    expect(result).toBeTruthy();
+  });
+
+  test("異なるISBNで重複がない場合falseを返す", async () => {
+    const existingIsbn = new BookId("9784167158057");
+    const newIsbn = new BookId("9784167158064");
+    const title = new Title("テスト書籍");
+    const price = new Price({ amount: 500, currency: "JPY" });
+    const book = Book.create(existingIsbn, title, price);
+    await inMemoryBookRepository.save(book);
+
+    const result = await isbnDuplicationCheckDomainService.execute(newIsbn);
+
+    expect(result).toBeFalsy();
   });
 });

@@ -1,17 +1,13 @@
 import { BookId } from "Domain/models/Book/BookId/BookId";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { IBookRepository } from "Domain/models/Book/IBookRepository";
 
 export class ISBNDuplicationCheckDomainService {
-  async execute(isbn: BookId): Promise<boolean> {
-    const duplicateISBNBok = await prisma.book.findUnique({
-      where: {
-        bookId: isbn.value,
-      },
-    });
+  constructor(private bookRepository: IBookRepository) {}
 
-    const isDuplicateISBN = !!duplicateISBNBok;
+  async execute(isbn: BookId): Promise<boolean> {
+    const duplicateISBNBook = await this.bookRepository.find(isbn);
+    const isDuplicateISBN = !!duplicateISBNBook;
+
     return isDuplicateISBN;
   }
 }

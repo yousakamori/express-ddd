@@ -11,10 +11,10 @@ datasource db {
 }
 
 model Book {
-  bookId     String @id
-  title      String
-  priceAmout Float
-  stock      Stock?
+  bookId      String @id
+  title       String
+  priceAmount Float
+  stock       Stock?
 }
 
 model Stock {

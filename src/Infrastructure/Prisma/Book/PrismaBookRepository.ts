@@ -1,5 +1,5 @@
 import { IBookRepository } from "Domain/models/Book/IBookRepository";
-import { PrismaClient, $Enums } from "@prisma/client";
+import { $Enums } from "@prisma/client";
 import { Status, StatusEnum } from "Domain/models/Book/Stock/Status/Status";
 import { Book } from "Domain/models/Book/Book";
 import { BookId } from "Domain/models/Book/BookId/BookId";
@@ -8,10 +8,11 @@ import { StockId } from "Domain/models/Book/Stock/StockId/StockId";
 import { QuantityAvailable } from "Domain/models/Book/Stock/QuantityAvailable/QuantityAvailable";
 import { Title } from "Domain/models/Book/Title/Title";
 import { Price } from "Domain/models/Book/Price/Price";
-
-const prisma = new PrismaClient();
+import { PrismaClientManager } from "../PrismaClientManager";
 
 export class PrismaBookRepository implements IBookRepository {
+  constructor(private clientManager: PrismaClientManager) {}
+
   private statusDataMapper(
     status: StatusEnum
   ): "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK" {
@@ -38,7 +39,9 @@ export class PrismaBookRepository implements IBookRepository {
   }
 
   async save(book: Book) {
-    await prisma.book.create({
+    const client = this.clientManager.getClient();
+
+    await client.book.create({
       data: {
         bookId: book.bookId.value,
         title: book.title.value,
@@ -55,7 +58,9 @@ export class PrismaBookRepository implements IBookRepository {
   }
 
   async update(book: Book) {
-    await prisma.book.update({
+    const clientManager = this.clientManager.getClient();
+
+    await clientManager.book.update({
       where: {
         bookId: book.bookId.value,
       },
@@ -73,11 +78,13 @@ export class PrismaBookRepository implements IBookRepository {
   }
 
   async delete(bookId: BookId) {
-    await prisma.book.delete({ where: { bookId: bookId.value } });
+    const clientManager = this.clientManager.getClient();
+    await clientManager.book.delete({ where: { bookId: bookId.value } });
   }
 
   async find(bookId: BookId): Promise<Book | null> {
-    const data = await prisma.book.findUnique({
+    const clientManager = this.clientManager.getClient();
+    const data = await clientManager.book.findUnique({
       where: {
         bookId: bookId.value,
       },

@@ -1,4 +1,4 @@
-import { ITransactionManager } from "appication/shared/ITransactionManager";
+import { ITransactionManager } from "Application/shared/ITransactionManager";
 import { PrismaClientManager } from "./PrismaClientManager";
 import prisma from "./PrismaClient";
 

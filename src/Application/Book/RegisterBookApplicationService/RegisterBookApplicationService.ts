@@ -4,7 +4,7 @@ import { IBookRepository } from "Domain/models/Book/IBookRepository";
 import { Price } from "Domain/models/Book/Price/Price";
 import { Title } from "Domain/models/Book/Title/Title";
 import { ISBNDuplicationCheckDomainService } from "Domain/services/Book/ISBNDuplicationCheckDomainService/ISBNDuplicationCheckDomainService";
-import { ITransactionManager } from "appication/shared/ITransactionManager";
+import { ITransactionManager } from "Application/shared/ITransactionManager";
 
 export type RegisterBookCommand = {
   isbn: string;

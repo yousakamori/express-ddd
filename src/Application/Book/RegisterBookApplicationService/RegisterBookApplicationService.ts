@@ -12,6 +12,7 @@ export type RegisterBookCommand = {
   priceAmount: number;
 };
 
+// ここで重要なのは、ISBN の重複チェックのビジネスロジックや、Bookエンティティ生成時のビジネスロジックがドメインオブジェクトに隠蔽されているということです。これにより、アプリケーションサービスの実装はドメイン知識を持たない状態で、ドメインオブジェクトを利用するだけでユースケースを実現することができます。
 export class RegisterBookApplicationService {
   constructor(
     private bookRepository: IBookRepository,

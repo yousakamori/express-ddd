@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import { PrismaBookRepository } from "./PrismaBookRepository";
 import { BookId } from "Domain/models/Book/BookId/BookId";
 import { Title } from "Domain/models/Book/Title/Title";
@@ -9,8 +8,7 @@ import { Stock } from "Domain/models/Book/Stock/Stock";
 import { QuantityAvailable } from "Domain/models/Book/Stock/QuantityAvailable/QuantityAvailable";
 import { Status, StatusEnum } from "Domain/models/Book/Stock/Status/Status";
 import { PrismaClientManager } from "../PrismaClientManager";
-
-const prisma = new PrismaClient();
+import prisma from "../PrismaClient";
 
 describe("PrismaBookRepository", () => {
   beforeEach(async () => {

@@ -20,6 +20,8 @@ app.listen(port, () => {
 
 app.use(express.json());
 app.post("/book", async (req, res) => {
+  // curl command
+  // curl -X POST -H "Content-Type: application/json" -d '{"isbn":"9784167155557","title":"吾輩は猫である","priceAmount":770}' http://localhost:3000/book
   try {
     const requestBody = req.body as {
       isbn: string;

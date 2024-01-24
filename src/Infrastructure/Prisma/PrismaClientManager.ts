@@ -6,7 +6,7 @@ export class PrismaClientManager implements IDataAccessClientManager<Client> {
   private client: Client = prisma;
 
   setClient(client: Client): void {
-    this.setClient(client);
+    this.client = client;
   }
 
   getClient(): Client {

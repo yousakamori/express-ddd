@@ -5,6 +5,7 @@ import { Price } from "Domain/models/Book/Price/Price";
 import { Title } from "Domain/models/Book/Title/Title";
 import { ISBNDuplicationCheckDomainService } from "Domain/services/Book/ISBNDuplicationCheckDomainService/ISBNDuplicationCheckDomainService";
 import { ITransactionManager } from "Application/shared/ITransactionManager";
+import { injectable, inject } from "tsyringe";
 
 export type RegisterBookCommand = {
   isbn: string;
@@ -13,9 +14,12 @@ export type RegisterBookCommand = {
 };
 
 // ここで重要なのは、ISBN の重複チェックのビジネスロジックや、Bookエンティティ生成時のビジネスロジックがドメインオブジェクトに隠蔽されているということです。これにより、アプリケーションサービスの実装はドメイン知識を持たない状態で、ドメインオブジェクトを利用するだけでユースケースを実現することができます。
+@injectable()
 export class RegisterBookApplicationService {
   constructor(
+    @inject("IBookRepository")
     private bookRepository: IBookRepository,
+    @inject("ITransactionManager")
     private transactionManager: ITransactionManager
   ) {}
 

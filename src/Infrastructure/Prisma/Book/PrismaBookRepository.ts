@@ -9,9 +9,13 @@ import { QuantityAvailable } from "Domain/models/Book/Stock/QuantityAvailable/Qu
 import { Title } from "Domain/models/Book/Title/Title";
 import { Price } from "Domain/models/Book/Price/Price";
 import { PrismaClientManager } from "../PrismaClientManager";
-
+import { injectable, inject } from "tsyringe";
+@injectable()
 export class PrismaBookRepository implements IBookRepository {
-  constructor(private clientManager: PrismaClientManager) {}
+  constructor(
+    @inject("IDataAccessClientManager")
+    private clientManager: PrismaClientManager
+  ) {}
 
   private statusDataMapper(
     status: StatusEnum

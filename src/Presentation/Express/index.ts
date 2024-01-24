@@ -1,11 +1,11 @@
+import "reflect-metadata";
+import "../../Program";
+import { container } from "tsyringe";
 import {
   RegisterBookApplicationService,
   RegisterBookCommand,
 } from "Application/Book/RegisterBookApplicationService/RegisterBookApplicationService";
-import { PrismaBookRepository } from "Infrastructure/Prisma/Book/PrismaBookRepository";
-import { PrismaClientManager } from "Infrastructure/Prisma/PrismaClientManager";
-import { PrismaTransactionManager } from "Infrastructure/Prisma/PrismaTransactionManager";
-import express from "express";
+import express, { json } from "express";
 
 const app = express();
 const port = 3000;
@@ -18,7 +18,7 @@ app.listen(port, () => {
   console.log(`Example app listen on port ${port}`);
 });
 
-app.use(express.json());
+app.use(json());
 app.post("/book", async (req, res) => {
   // curl command
   // curl -X POST -H "Content-Type: application/json" -d '{"isbn":"9784167155557","title":"吾輩は猫である","priceAmount":770}' http://localhost:3000/book
@@ -29,13 +29,12 @@ app.post("/book", async (req, res) => {
       priceAmount: number;
     };
 
-    const clientManager = new PrismaClientManager();
-    const transactionManager = new PrismaTransactionManager(clientManager);
-    const bookRepository = new PrismaBookRepository(clientManager);
+    // const clientManager = new PrismaClientManager();
+    // const transactionManager = new PrismaTransactionManager(clientManager);
+    // const bookRepository = new PrismaBookRepository(clientManager);
 
-    const registerBookApplicationService = new RegisterBookApplicationService(
-      bookRepository,
-      transactionManager
+    const registerBookApplicationService = container.resolve(
+      RegisterBookApplicationService
     );
 
     const registerCommand: RegisterBookCommand = requestBody;

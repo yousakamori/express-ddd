@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon  --exec ts-node src/Presentation/Express/index.ts",
     "test": "jest",
-    "serve": "ts-node src/Presentation/Express/index.ts"
+    "studio": "prisma studio"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "jest": "^29.7.0",
+    "nodemon": "^3.0.3",
     "prettier": "^3.2.2",
     "prisma": "^5.8.1",
     "ts-jest": "^29.1.1",

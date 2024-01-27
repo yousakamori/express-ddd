@@ -7,6 +7,7 @@ import { Status, StatusEnum } from "Domain/models/Book/Stock/Status/Status";
 import { Stock } from "Domain/models/Book/Stock/Stock";
 import { StockId } from "Domain/models/Book/Stock/StockId/StockId";
 import { Title } from "Domain/models/Book/Title/Title";
+import { MockDomainEventPublisher } from "Infrastructure/DomainEvent/EventEmitter/Mock/MockDomainEventPublisher";
 
 export const bookTestDataCreator =
   (repository: IBookRepository) =>
@@ -29,7 +30,7 @@ export const bookTestDataCreator =
       )
     );
 
-    await repository.save(entity);
+    await repository.save(entity, new MockDomainEventPublisher());
 
     return entity;
   };

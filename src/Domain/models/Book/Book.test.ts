@@ -1,3 +1,4 @@
+import { BOOK_EVENT_NAME } from "Domain/shared/DomainEvent/Book/BookDomainEventFactory";
 import { Book } from "./Book";
 import { BookId } from "./BookId/BookId";
 import { Price } from "./Price/Price";
@@ -40,6 +41,11 @@ describe("Book", () => {
       expect(
         book.status.equals(new Status(StatusEnum.OutOfStock))
       ).toBeTruthy();
+    });
+    // TODO: delete と depleted のDomainEventテストも追加
+    it("デフォルト値で在庫を作成し、ドメインイベントが生成される", () => {
+      const book = Book.create(bookId, title, price);
+      expect(book.getDomainEvents()[0].eventName).toBe(BOOK_EVENT_NAME.CREATED);
     });
   });
 

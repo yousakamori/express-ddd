@@ -1,3 +1,5 @@
+import { EventEmitterDomainEventPublisher } from "Infrastructure/DomainEvent/EventEmitter/EventEmitterDomainEventPublisher";
+import { EventEmitterDomainEventSubscriber } from "Infrastructure/DomainEvent/EventEmitter/EventEmitterDomainEventSubscriber";
 import { PrismaBookRepository } from "Infrastructure/Prisma/Book/PrismaBookRepository";
 import { PrismaClientManager } from "Infrastructure/Prisma/PrismaClientManager";
 import { PrismaTransactionManager } from "Infrastructure/Prisma/PrismaTransactionManager";
@@ -24,3 +26,12 @@ container.register(
     lifecycle: Lifecycle.ResolutionScoped,
   }
 );
+
+// DomainEvent
+container.register("IDomainEventPublisher", {
+  useClass: EventEmitterDomainEventPublisher,
+});
+
+container.register("IDomainEventSubscriber", {
+  useClass: EventEmitterDomainEventSubscriber,
+});

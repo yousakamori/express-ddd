@@ -15,8 +15,8 @@ export class InMemoryBookRepository implements IBookRepository {
     this.DB[book.bookId.value] = book;
   }
 
-  async delete(bookId: BookId) {
-    delete this.DB[bookId.value];
+  async delete(book: Book) {
+    delete this.DB[book.bookId.value];
   }
 
   async find(bookId: BookId): Promise<Book | null> {

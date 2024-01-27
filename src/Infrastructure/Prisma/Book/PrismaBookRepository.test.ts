@@ -9,6 +9,7 @@ import { QuantityAvailable } from "Domain/models/Book/Stock/QuantityAvailable/Qu
 import { Status, StatusEnum } from "Domain/models/Book/Stock/Status/Status";
 import { PrismaClientManager } from "../PrismaClientManager";
 import prisma from "../PrismaClient";
+import { IDomainEventPublisher } from "Domain/shared/DomainEvent/IDomainEventPublisher";
 
 describe("PrismaBookRepository", () => {
   beforeEach(async () => {
@@ -17,6 +18,9 @@ describe("PrismaBookRepository", () => {
   });
   const clientManager = new PrismaClientManager();
   const repository = new PrismaBookRepository(clientManager);
+  const mockDomainEventPublisher = {
+    publish: jest.fn(),
+  } as IDomainEventPublisher;
 
   test("saveした集約がfindで取得できる", async () => {
     const bookId = new BookId("9784167158057");
@@ -24,7 +28,7 @@ describe("PrismaBookRepository", () => {
     const price = new Price({ amount: 770, currency: "JPY" });
 
     const book = Book.create(bookId, title, price);
-    await repository.save(book);
+    await repository.save(book, mockDomainEventPublisher);
 
     const createdEntity = await repository.find(bookId);
     expect(createdEntity?.bookId.equals(bookId)).toBeTruthy();
@@ -53,7 +57,7 @@ describe("PrismaBookRepository", () => {
       stock
     );
 
-    await repository.update(book);
+    await repository.update(book, mockDomainEventPublisher);
     const updatedEntity = await repository.find(createdEntity.bookId);
 
     expect(updatedEntity?.bookId.equals(book.bookId)).toBeTruthy();
@@ -72,7 +76,7 @@ describe("PrismaBookRepository", () => {
     const readEntity = await repository.find(createdEntity.bookId);
     expect(readEntity).not.toBeNull();
 
-    await repository.delete(createdEntity.bookId);
+    await repository.delete(createdEntity, mockDomainEventPublisher);
     const deletedEntity = await repository.find(createdEntity.bookId);
     expect(deletedEntity).toBeNull();
   });

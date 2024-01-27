@@ -50,7 +50,7 @@ export class Book extends DomainEventStorable {
   }
 
   // 販売可能かどうか
-  isSalable() {
+  isSaleable() {
     return (
       this._stock.quantityAvailable.value > 0 &&
       this._stock.status.value !== StatusEnum.OutOfStock

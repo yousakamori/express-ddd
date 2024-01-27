@@ -24,7 +24,7 @@ describe("Book", () => {
   });
 
   describe("create", () => {
-    it("デフォルト値で在庫を作成する", () => {
+    it("デフォルト値で在庫を作成し、ドメインイベントが生成される", () => {
       const book = Book.create(bookId, title, price);
 
       expect(book.bookId.equals(bookId)).toBeTruthy();
@@ -41,22 +41,19 @@ describe("Book", () => {
       expect(
         book.status.equals(new Status(StatusEnum.OutOfStock))
       ).toBeTruthy();
-    });
-    // TODO: delete と depleted のDomainEventテストも追加
-    it("デフォルト値で在庫を作成し、ドメインイベントが生成される", () => {
-      const book = Book.create(bookId, title, price);
+
       expect(book.getDomainEvents()[0].eventName).toBe(BOOK_EVENT_NAME.CREATED);
     });
   });
 
   describe("delete", () => {
-    it("在庫ありの場合は例外を投げる", () => {
+    test("在庫ありの場合は例外を投げる", () => {
+      const stock = Stock.reconstruct(stockId, quantityAvailable, status);
       const book = Book.reconstruct(bookId, title, price, stock);
-
       expect(() => book.delete()).toThrow("在庫がある場合は削除できません");
     });
 
-    it("在庫なしの場合は例外を投げない", () => {
+    it("在庫なしの場合は例外を投げない&ドメインイベントが生成される", () => {
       const notOnSalesStatus = new Status(StatusEnum.OutOfStock);
       const notQuantityAvailable = new QuantityAvailable(0);
       const stock = Stock.reconstruct(
@@ -68,6 +65,7 @@ describe("Book", () => {
       const book = Book.reconstruct(bookId, title, price, stock);
 
       expect(() => book.delete()).not.toThrow();
+      expect(book.getDomainEvents()[0].eventName).toBe(BOOK_EVENT_NAME.DELETED);
     });
   });
 
@@ -76,7 +74,7 @@ describe("Book", () => {
       const stock = Stock.reconstruct(stockId, quantityAvailable, status);
       const book = Book.reconstruct(bookId, title, price, stock);
 
-      expect(book.isSalable()).toBeTruthy();
+      expect(book.isSaleable()).toBeTruthy();
     });
 
     it("在庫なし、在庫数0の場合はfalseを返す", () => {
@@ -89,7 +87,7 @@ describe("Book", () => {
       );
       const book = Book.reconstruct(bookId, title, price, stock);
 
-      expect(book.isSalable()).toBeFalsy();
+      expect(book.isSaleable()).toBeFalsy();
     });
   });
 
@@ -111,6 +109,12 @@ describe("Book", () => {
 
       expect(spy).toHaveBeenCalled();
     });
+
+    it("ステータスが在庫切れの場合はドメインイベントが生成される", () => {});
+    const book = Book.reconstruct(bookId, title, price, stock);
+    book.decreaseStock(100);
+
+    expect(book.getDomainEvents()[0].eventName).toBe(BOOK_EVENT_NAME.DEPLETED);
   });
 
   describe("changeTitle", () => {

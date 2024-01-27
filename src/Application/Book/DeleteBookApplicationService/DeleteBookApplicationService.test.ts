@@ -6,15 +6,18 @@ import {
 } from "./DeleteBookApplicationService";
 import { bookTestDataCreator } from "Infrastructure/shared/Book/bookTestDataCreator";
 import { BookId } from "Domain/models/Book/BookId/BookId";
+import { MockDomainEventPublisher } from "Infrastructure/DomainEvent/EventEmitter/Mock/MockDomainEventPublisher";
 
 describe("DeleteBookApplicationService", () => {
   it("書籍を削除することができる", async () => {
     const repository = new InMemoryBookRepository();
     const mockTransactionManager = new MockTransactionManager();
+    const mockDomainEventPublisher = new MockDomainEventPublisher();
 
     const deleteBookApplicationService = new DeleteBookApplicationService(
       repository,
-      mockTransactionManager
+      mockTransactionManager,
+      mockDomainEventPublisher
     );
 
     const bookId = "9784167158057";

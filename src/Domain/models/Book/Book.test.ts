@@ -48,6 +48,7 @@ describe("Book", () => {
 
   describe("delete", () => {
     test("在庫ありの場合は例外を投げる", () => {
+      // TODO: stockの定数をここで宣言しないと落ちた -> 最上位のdescribeで宣言されているstockのスコープを確認した方がいい
       const stock = Stock.reconstruct(stockId, quantityAvailable, status);
       const book = Book.reconstruct(bookId, title, price, stock);
       expect(() => book.delete()).toThrow("在庫がある場合は削除できません");

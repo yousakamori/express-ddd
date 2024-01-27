@@ -6,16 +6,19 @@ import {
 } from "./IncreaseBookStockApplicationService";
 import { bookTestDataCreator } from "Infrastructure/shared/Book/bookTestDataCreator";
 import { BookId } from "Domain/models/Book/BookId/BookId";
+import { MockDomainEventPublisher } from "Infrastructure/DomainEvent/EventEmitter/Mock/MockDomainEventPublisher";
 
 describe("IncreaseBookStockApplicationService", () => {
   it("書籍の在庫を増加することができる", async () => {
     const repository = new InMemoryBookRepository();
     const mockTransactionManager = new MockTransactionManager();
+    const mockDomainEventPublisher = new MockDomainEventPublisher();
 
     const increaseBookStockApplicationService =
       new IncreaseBookStockApplicationService(
         repository,
-        mockTransactionManager
+        mockTransactionManager,
+        mockDomainEventPublisher
       );
 
     const bookId = "9784167158057";
@@ -37,11 +40,13 @@ describe("IncreaseBookStockApplicationService", () => {
   it("書籍が存在しない場合例外を投げる", async () => {
     const repository = new InMemoryBookRepository();
     const mockTransactionManager = new MockTransactionManager();
+    const mockDomainEventPublisher = new MockDomainEventPublisher();
 
     const increaseBookStockApplicationService =
       new IncreaseBookStockApplicationService(
         repository,
-        mockTransactionManager
+        mockTransactionManager,
+        mockDomainEventPublisher
       );
 
     const bookId = "9784167158057";

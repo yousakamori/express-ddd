@@ -6,6 +6,7 @@ import {
   RegisterBookCommand,
 } from "Application/Book/RegisterBookApplicationService/RegisterBookApplicationService";
 import express, { json } from "express";
+import { BookLogSubscriber } from "Application/shared/DomainEvent/subscribers/BookLogSubscriber";
 
 const app = express();
 const port = 3000;
@@ -16,6 +17,7 @@ app.get("/", (_, res) => {
 
 app.listen(port, () => {
   console.log(`Example app listen on port ${port}`);
+  container.resolve(BookLogSubscriber);
 });
 
 app.use(json());
@@ -28,10 +30,6 @@ app.post("/book", async (req, res) => {
       title: string;
       priceAmount: number;
     };
-
-    // const clientManager = new PrismaClientManager();
-    // const transactionManager = new PrismaTransactionManager(clientManager);
-    // const bookRepository = new PrismaBookRepository(clientManager);
 
     const registerBookApplicationService = container.resolve(
       RegisterBookApplicationService

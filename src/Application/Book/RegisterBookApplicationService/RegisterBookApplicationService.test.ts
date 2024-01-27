@@ -5,14 +5,18 @@ import {
   RegisterBookCommand,
 } from "./RegisterBookApplicationService";
 import { bookTestDataCreator } from "Infrastructure/shared/Book/bookTestDataCreator";
+import { MockDomainEventPublisher } from "Infrastructure/DomainEvent/EventEmitter/Mock/MockDomainEventPublisher";
 
 describe("RegisterBookApplicationService", () => {
   it("重複書籍が存在しない場合書籍が正常に作成できる", async () => {
     const repository = new InMemoryBookRepository();
     const mockTransactionManager = new MockTransactionManager();
+    const mockDomainEventPublisher = new MockDomainEventPublisher();
+
     const registerBookApplicationService = new RegisterBookApplicationService(
       repository,
-      mockTransactionManager
+      mockTransactionManager,
+      mockDomainEventPublisher
     );
 
     const command: Required<RegisterBookCommand> = {
@@ -28,9 +32,12 @@ describe("RegisterBookApplicationService", () => {
   it("重複書籍が存在する場合例外を投げる", async () => {
     const repository = new InMemoryBookRepository();
     const mockTransactionManager = new MockTransactionManager();
+    const mockDomainEventPublisher = new MockDomainEventPublisher();
+
     const registerBookApplicationService = new RegisterBookApplicationService(
       repository,
-      mockTransactionManager
+      mockTransactionManager,
+      mockDomainEventPublisher
     );
 
     const bookID = "9784167158057";
